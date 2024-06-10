@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="357.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.lab4.ParamController">
+   <Text layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Change MicroObject Details" wrappingWidth="340.5367126464844">
+      <font>
+         <Font size="24.0" />
+      </font>
+   </Text>
+   <Text layoutX="14.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="121.33670043945312">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Text layoutX="14.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cursed Energy" wrappingWidth="121.33670043945312">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Text layoutX="14.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lvl" wrappingWidth="170.93667602539062">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Text layoutX="14.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X Position" wrappingWidth="170.93667602539062">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Text layoutX="14.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Y Position" wrappingWidth="170.93667602539062">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Button fx:id="okButton" layoutX="159.0" layoutY="360.0" mnemonicParsing="false" onAction="#okButtonClicked" prefHeight="26.0" prefWidth="88.0" text="OK" />
+   <Button fx:id="cancelButton" layoutX="247.0" layoutY="360.0" mnemonicParsing="false" onAction="#cancel" prefHeight="26.0" prefWidth="88.0" text="Cancel" />
+   <TextField fx:id="nameInput" layoutX="185.0" layoutY="38.0" />
+   <TextField fx:id="ceInput" layoutX="185.0" layoutY="62.0" />
+   <TextField fx:id="lvlinput" layoutX="185.0" layoutY="112.0" />
+   <TextField layoutX="185.0" layoutY="161.0" fx:id="xPosInput" />
+   <TextField fx:id="yPosInput" layoutX="185.0" layoutY="188.0" />
+   <Text layoutX="14.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HP" wrappingWidth="170.93667602539062">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <TextField fx:id="hpinput" layoutX="185.0" layoutY="89.0" />
+</AnchorPane>
