@@ -13,9 +13,8 @@ import javafx.stage.Stage;
 import sample.lab4.Main;
 import sample.lab4.ParamController;
 import sample.lab4.Paths;
-import sample.macroobj.Expansion;
-import sample.macroobj.School;
-import sample.macroobj.Sibyua;
+import sample.macroobj.*;
+
 
 import java.io.*;
 import java.io.File;
@@ -557,6 +556,27 @@ public class MicroObjectManager {
         result.ifPresent(microObject -> System.out.println("Created"));
     }
 
-    public void updateAllMicroObjects(){}
+    //public void updateAllMicroObjects(){}
 
+
+    public void updateAllMicroObjects(){
+        for(Territory lobby : MacroObjectManager.getMacroObjects()){
+            for(Shaman knight : getArray()){
+                knight.update(lobby);
+            }
+        }
+        for (Shaman knight : getArray()) {
+            for (Shaman otherKnight : getArray()) {
+                if (knight != otherKnight) {
+                    if (((knight.getX() >= otherKnight.getX() && knight.getX() <= otherKnight.getX() + otherKnight.getWidth() ||
+                            knight.getX() + knight.getWidth() >= otherKnight.getX() && knight.getX() <= otherKnight.getX() + otherKnight.getWidth()) &&
+                            (knight.getY() >= otherKnight.getY() && knight.getY() <= otherKnight.getY() + otherKnight.getHeight() ||
+                                    knight.getY() + knight.getHeight() >= otherKnight.getY() && knight.getY() <= otherKnight.getY() + otherKnight.getHeight()))) {
+                        knight.setInteract();
+                        otherKnight.setInteract();
+                    }
+                }
+            }
+        }
+    }
 }

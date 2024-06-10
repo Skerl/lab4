@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="com.obiscr.chatgpt.settings.EasyCodeState">
+    <option name="projectFiles" value="$PROJECT_DIR$/src/main/java/sample/lab4/Main.java;D:/Навчання/курсова/project/lab4/src/main/java/sample/lab4/ParamController.java;D:/Навчання/курсова/project/lab4/src/main/java/sample/lab4/Paths.java;D:/Навчання/курсова/project/lab4/src/main/java/sample/macroobj/Expansion.java;D:/Навчання/курсова/project/lab4/src/main/java/sample/macroobj/MacroObjectManager.java;D:/Навчання/курсова/project/lab4/src/main/java/sample/macroobj/School.java;D:/Навчання/курсова/project/lab4/src/main/java/sample/macroobj/Sibyua.java;D:/Навчання/курсова/project/lab4/src/main/java/sample/macroobj/Territory.java;D:/Навчання/курсова/project/lab4/src/main/java/sample/microobj/MicroObjectManager.java;D:/Навчання/курсова/project/lab4/src/main/java/sample/microobj/Shaman.java;D:/Навчання/курсова/project/lab4/src/main/java/sample/microobj/ShamanGrade1.java;D:/Навчання/курсова/project/lab4/src/main/java/sample/microobj/ShamanGradeHigh.java;D:/Навчання/курсова/project/lab4/src/main/java/module-info.java;D:/Навчання/курсова/project/lab4/pom.xml" />
+  </component>
+</project>

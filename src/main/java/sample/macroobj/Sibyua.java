@@ -36,14 +36,26 @@ public class Sibyua extends Territory{
         }
     }
 
-//    @Override
 //    protected void addNewMicroObject(Object object){
 //        if (object instanceof Shaman) {
-//            if(microObjects.contains((Shaman)object)) {
+//            if(microObjects.contains((Shaman) object)) {
 //                return;
 //            }
 //            microObjectsNames.add(((Shaman) object).getName());
 //            microObjects.add((Shaman) object);
+//        }
+//    }
+//
+//    protected void removeNewMicroObject(Object object) {
+//        if (object instanceof Shaman) {
+//            if(microObjects.contains((Shaman)object)) {
+//                microObjects.remove(object);
+//            }
+//
+//            int indexToRemove = microObjectsNames.indexOf(((Shaman) object).getName());
+//            if (indexToRemove != -1) {
+//                microObjectsNames.remove(indexToRemove);
+//            }
 //        }
 //    }
 }

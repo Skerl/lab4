@@ -7,6 +7,13 @@ import java.util.ArrayList;
 public class MacroObjectManager {
     private static MacroObjectManager instance;
     protected static final ArrayList<Territory> macroObjects = new ArrayList<>();
+    public static final int X_POS_SCHOOL = 70;
+    public static final int Y_POS_SCHOOL = 50;
+    public static final int X_POS_EXPANCION = 1100;
+    public static final int Y_POS_EXPANCION = 50;
+    public static final int X_POS_SIBYUA = 600;
+    public static final int Y_POS_SIBYUA = 450;
+
 
     public MacroObjectManager() {
         School school = new School(70, 50);
@@ -19,7 +26,7 @@ public class MacroObjectManager {
         addMacroObject(sibyua);
     }
 
-    public synchronized ArrayList<Territory> getMacroObjects() {
+    public static synchronized ArrayList<Territory> getMacroObjects() {
         return macroObjects;
     }
 
