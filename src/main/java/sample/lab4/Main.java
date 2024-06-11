@@ -87,6 +87,9 @@ public class Main extends Application {
 
         mainScene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
+                case Q:
+                    microObjectManager.swichToWhiteBack(); // поміняти колір іконки рангу на червоний
+                    break;
                 case TAB:
                     microObjectManager.swichToRedBack(); // поміняти колір іконки рангу на червоний
                     break;
@@ -111,7 +114,7 @@ public class Main extends Application {
                 case F5:
                     microObjectManager.changeActiveParam(); // редагувати мікрочелів
                     break;
-                case F4:
+                case Z:
                     microObjectManager.printActiveMicroObjects(); // вивести всі мікрооб'єкти в консоль
                     break;
                 case I:
@@ -120,20 +123,20 @@ public class Main extends Application {
                 case O:
                     microObjectManager.loadShamans(); // відкрити сейв
                     break;
-                case L:
+                case X:
                     microObjectManager.printRequest(); // вевести запит, об'єкти які мають більшо 50Хп, мають більше 4750 енергії...
                     break;
-                case M:
+                case C:
                     microObjectManager.sortMicroObjects(); // сортування за певним параметром
                     break;
-                case K:
+                case V:
                     microObjectManager.printHandledMicroObjects(); // пошук об'єктів які належать до макрооб'єктів
                     break;
-                case H:
+                case B:
                     microObjectManager.searchMicroObject(); // пошук мікрочелів по параметрам
                     break;
-                case J:
-                    microObjectManager.dontDeepCopy();
+                case N:
+                    microObjectManager.deepCopy(); // глибоке копіювання
                     break;
                 case F12:
                     System.exit(0); // завершити роботу програми

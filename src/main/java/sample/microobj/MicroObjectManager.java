@@ -166,7 +166,7 @@ public class MicroObjectManager {
         shamans.add(o);
     }
 
-    public void dontDeepCopy() {
+    public void deepCopy() {
         if(getOnlyActiveShaman() != null) {
             Shaman copiedShaman = null;
             try {
@@ -181,13 +181,6 @@ public class MicroObjectManager {
     }
 
 
-
-    public void deepCopy(){
-        if(getOnlyActiveShaman() != null) {
-
-        }
-    }
-
     public void swichToRedBack() {
 //        Shaman activeShaman = getOnlyActiveShaman();
         if(getOnlyActiveShaman() != null){
@@ -198,9 +191,19 @@ public class MicroObjectManager {
             } else if(getOnlyActiveShaman().getClass() == ShamanGradeHigh.class){
                 getOnlyActiveShaman().setGradeImageView(new ImageView(Objects.requireNonNull(getClass().getResource(Paths.gradeHighPathRed)).toExternalForm()));
             }
+        }
+    }
 
-
-
+    public void swichToWhiteBack() {
+//        Shaman activeShaman = getOnlyActiveShaman();
+        if(getOnlyActiveShaman() != null){
+            if(getOnlyActiveShaman().getClass() == Shaman.class){
+                getOnlyActiveShaman().setGradeImageView(new ImageView(Objects.requireNonNull(getClass().getResource(Paths.grade2Path)).toExternalForm()));
+            } else if(getOnlyActiveShaman().getClass() == ShamanGrade1.class){
+                getOnlyActiveShaman().setGradeImageView(new ImageView(Objects.requireNonNull(getClass().getResource(Paths.grade1Path)).toExternalForm()));
+            } else if(getOnlyActiveShaman().getClass() == ShamanGradeHigh.class){
+                getOnlyActiveShaman().setGradeImageView(new ImageView(Objects.requireNonNull(getClass().getResource(Paths.gradeHighPath)).toExternalForm()));
+            }
         }
     }
 
