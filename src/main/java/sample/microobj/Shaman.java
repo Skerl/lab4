@@ -6,8 +6,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import sample.lab4.Main;
 import sample.lab4.Paths;
-import sample.macroobj.MacroObjectManager;
-import sample.macroobj.Territory;
 
 import java.io.Serializable;
 import java.util.Random;
@@ -34,16 +32,12 @@ public class Shaman implements Comparable<Shaman>, Cloneable, Serializable {
     private String BackPath;
     private final int uniqueID;
 
-    private Territory handler;
-    private boolean isHolding = false;
-
-
     public int getUniqueID() {
         return uniqueID;
     }
 
     public int createID() {
-        return (int) System.currentTimeMillis() / 567;
+        return (int) System.currentTimeMillis() / 432;
     }
 
 
@@ -78,7 +72,6 @@ public class Shaman implements Comparable<Shaman>, Cloneable, Serializable {
         this.yPos = yPos;
         this.uniqueID = createID();
         this.BackPath = randomPngForMicroObj(Paths.MICRO_GR2);
-        random = new Random();
         ImageView imageView = new ImageView(Objects.requireNonNull(getClass().getResource("/sample/lab4/gr1_01.png")).toExternalForm());
         setImagePng(imageView);
 
@@ -439,139 +432,6 @@ public class Shaman implements Comparable<Shaman>, Cloneable, Serializable {
         System.out.println("randomNumber: " + randomNumber);
 
         return path[randomNumber];
-    }
-
-    private boolean previousExpancion = true;
-    private boolean previousSchool = false;
-    private boolean previousSibyua = false;
-    private boolean complete = false;
-    private int randomGoalX = -1;
-    private int randomGoalY = -1;
-    private final Random random;
-    private int tickExisted;
-
-
-    public void update(Territory object) {
-        checkCollision(object);
-        if (!isActive) {
-            if (complete) {
-                if (randomGoalX == -1 && randomGoalY == -1) {
-                    randomGoalX = random.nextInt(100, 1200);
-                    randomGoalY = random.nextInt(100, 1200);
-                } else {
-                    if (Math.abs(xPos - randomGoalX) < 30 && Math.abs(yPos - randomGoalY) < 30) {
-                        randomGoalX = -1;
-                        randomGoalY = -1;
-                        complete = false;
-                        isHolding = false;
-                    } else {
-                        moveTo(randomGoalX, randomGoalY);
-                    }
-                }
-            } else {
-                if (!isHolding) {
-                    if (previousExpancion && !previousSibyua) {
-                        moveTo(MacroObjectManager.X_POS_SCHOOL, MacroObjectManager.Y_POS_SCHOOL);
-                    } else if (previousSchool) {
-                        moveTo(MacroObjectManager.X_POS_SIBYUA, MacroObjectManager.Y_POS_SIBYUA);
-                    } else if (previousSibyua) {
-                        moveTo(MacroObjectManager.X_POS_EXPANCION, MacroObjectManager.Y_POS_EXPANCION);
-                    }
-                }
-            }
-        }
-    }
-
-    protected void checkCollision(Territory location) {
-        if (((xPos >= location.xPos && xPos <= location.xPos + location.getWidth() ||
-                xPos + width >= location.xPos && xPos <= location.xPos + location.getWidth()) &&
-                (yPos >= location.yPos && yPos <= location.yPos + location.getHeight() ||
-                        yPos + height >= location.yPos && yPos <= location.yPos + location.getHeight()))) {
-
-            if (handler != null) {
-                handler.addNewMicroObject(this);
-            }
-            handler = location;
-
-            if (tickExisted != 2000) {
-                tickExisted++;
-            } else {
-                complete = true;
-                tickExisted = 0;
-            }
-
-            if (location instanceof EnemyRoom) {
-                if (previousSchool) {
-                    tickExisted = 0;
-                    complete = false;
-                    isHolding = true;
-                }
-                location.addNewMicroObject(this);
-                setMana(Math.round((getMana() - Math.random() / 100) * 100.0) / 100.0);
-                setShootingExperience(Math.round((getShootingExperience() + Math.random() / 100) * 100.0) / 100.0);
-                previousExpancion = false;
-                previousSchool = false;
-                previousSibyua = true;
-            } else if (location instanceof Garden) {
-                location.addNewMicroObject(this);
-                if (previousExpancion) {
-                    tickExisted = 0;
-                    complete = false;
-                    isHolding = true;
-                }
-
-                double dMana = Math.round((getMana() + Math.random() / 100) * 100.0) / 100.0;
-                location.addMana(dMana - getMana());
-                setMana(dMana);
-                setShootingExperience(Math.round((getShootingExperience() + Math.random() / 100) * 100.0) / 100.0);
-                if (Math.random() == 0.01) {
-                    isAccumulatedUlt = true;
-                }
-                previousExpancion = false;
-                previousSchool = true;
-                previousSibyua = false;
-            } else {
-                if (previousSibyua) {
-                    tickExisted = 0;
-                    complete = false;
-                    isHolding = true;
-                }
-                location.addNewMicroObject(this);
-                double dMana = Math.round((getMana() + Math.random() / 100) * 100.0) / 100.0;
-                location.addMana(dMana - getMana());
-                setMana(dMana);
-                setShootingExperience(Math.round((getShootingExperience() + Math.random() / 100) * 100.0) / 100.0);
-                previousExpancion = true;
-                previousSchool = false;
-                previousSibyua = false;
-            }
-        } else {
-            if (handler != null) {
-                handler.removeNewMicroObject(this);
-                handler = null;
-            }
-        }
-    }
-
-    public void moveTo(int x, int y) {
-        int currentX = (int) getXPos();
-        int currentY = (int) getYPos();
-        int dx = x - currentX;
-        int dy = y - currentY;
-        double distance = Math.sqrt(dx * dx + dy * dy);
-        double normDx = (distance > 10) ? dx / distance : 10;
-        double normDy = (distance > 10) ? dy / distance : 10;
-        int moveDistance = 2;
-        int newX = (int) (currentX + moveDistance * normDx);
-        int newY = (int) (currentY + moveDistance * normDy);
-        setXPos(newX);
-        setYPos(newY);
-    }
-
-    protected int interactTiks = 0;
-
-    public void setInteract(){
-        interactTiks = 400;
     }
 }
 
