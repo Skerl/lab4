@@ -88,7 +88,7 @@ public class Main extends Application {
         mainScene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case TAB:
-                    microObjectManager.swichToRedBack();
+                    microObjectManager.swichToRedBack(); // поміняти колір іконки рангу на червоний
                     break;
                 case F1:
                     microObjectManager.fastCreateMicroObjectGR2(); // швидке створення мікрочела початкового рівця
@@ -121,16 +121,23 @@ public class Main extends Application {
                     microObjectManager.loadShamans(); // відкрити сейв
                     break;
                 case L:
-                    microObjectManager.printRequest();
+                    microObjectManager.printRequest(); // вевести запит, об'єкти які мають більшо 50Хп, мають більше 4750 енергії...
                     break;
                 case M:
-                    microObjectManager.sortMicroObjects();
+                    microObjectManager.sortMicroObjects(); // сортування за певним параметром
                     break;
                 case K:
-                    microObjectManager.printHandledMicroObjects();
+                    microObjectManager.printHandledMicroObjects(); // пошук об'єктів які належать до макрооб'єктів
+                    break;
+                case H:
+                    microObjectManager.searchMicroObject(); // пошук мікрочелів по параметрам
+                    break;
+                case J:
+                    microObjectManager.dontDeepCopy();
                     break;
                 case F12:
-                    System.exit(0);
+                    System.exit(0); // завершити роботу програми
+
             }
             microObjectManager.moveActiveMicroObjects(event.getCode());
         });

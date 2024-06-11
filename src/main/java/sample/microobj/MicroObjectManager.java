@@ -13,9 +13,7 @@ import javafx.stage.Stage;
 import sample.lab4.Main;
 import sample.lab4.ParamController;
 import sample.lab4.Paths;
-import sample.macroobj.Expansion;
-import sample.macroobj.School;
-import sample.macroobj.Sibyua;
+import sample.macroobj.*;
 
 import java.io.*;
 import java.io.File;
@@ -126,21 +124,21 @@ public class MicroObjectManager {
                 switch (choice) {
                     case 1:
                         for(Shaman o: shamans){
-                            if((o.getXPos() >= 70 && o.getXPos() <= 470) && (o.getYPos() >= 50 && o.getYPos() <= 350)   ){
+                            if((o.getXPos() >= MacroObjectManager.X_POS_SCHOOL && o.getXPos() <= MacroObjectManager.X_POS_SCHOOL + MacroObjectManager.WIDTH) && (o.getYPos() >= MacroObjectManager.Y_POS_SCHOOL && o.getYPos() <= MacroObjectManager.Y_POS_SCHOOL + MacroObjectManager.HEIGHT)   ){
                                 System.out.println(o);
                             }
                         }
                         break;
                     case 2:
                         for(Shaman o: shamans){
-                            if((o.getXPos() >= 1100 && o.getXPos() <= 1500) && (o.getYPos() >= 50 && o.getYPos() <= 350)   ){
+                            if((o.getXPos() >= MacroObjectManager.X_POS_EXPANCION && o.getXPos() <= MacroObjectManager.X_POS_EXPANCION  + MacroObjectManager.WIDTH) && (o.getYPos() >= MacroObjectManager.Y_POS_EXPANCION && o.getYPos() <= MacroObjectManager.Y_POS_EXPANCION + MacroObjectManager.HEIGHT)   ){
                                 System.out.println(o);
                             }
                         }
                         break;
                     case 3:
                         for(Shaman o: shamans){
-                            if((o.getXPos() >= 600 && o.getXPos() <= 1000) && (o.getYPos() >= 450 && o.getYPos() <= 750)   ){
+                            if((o.getXPos() >= MacroObjectManager.X_POS_SIBYUA && o.getXPos() <= MacroObjectManager.X_POS_SIBYUA + MacroObjectManager.WIDTH) && (o.getYPos() >= MacroObjectManager.Y_POS_SIBYUA && o.getYPos() <= MacroObjectManager.Y_POS_SIBYUA + MacroObjectManager.HEIGHT)   ){
                                 System.out.println(o);
                             }
                         }
@@ -168,6 +166,27 @@ public class MicroObjectManager {
         shamans.add(o);
     }
 
+    public void dontDeepCopy() {
+        if(getOnlyActiveShaman() != null) {
+            Shaman copiedShaman = null;
+            try {
+                copiedShaman = (Shaman) getOnlyActiveShaman().clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+            copiedShaman.setxPos(0);
+            copiedShaman.setYPos(0);
+            shamans.add(copiedShaman);
+        }
+    }
+
+
+
+    public void deepCopy(){
+        if(getOnlyActiveShaman() != null) {
+
+        }
+    }
 
     public void swichToRedBack() {
 //        Shaman activeShaman = getOnlyActiveShaman();
@@ -183,6 +202,54 @@ public class MicroObjectManager {
 
 
         }
+    }
+
+
+
+    public void searchMicroObject() {
+        new Thread(() -> {
+            try {
+                Scanner scanner = new Scanner(System.in);
+                System.out.println("Введіть параметри об'єкта:");
+                System.out.print("Name: ");
+                String name = scanner.nextLine();
+                System.out.print("isActive: (true/false) ");
+                boolean isActive = Boolean.parseBoolean(scanner.nextLine());
+                System.out.print("hp: ");
+                int hitpoint = Integer.parseInt(scanner.nextLine());
+                System.out.print("CE: ");
+                double CE = Double.parseDouble(scanner.nextLine());
+                boolean found = false;
+
+                for (Shaman microObject : MicroObjectManager.getInstance().getShamans()) {
+                    if (microObject.getName().equals(name) && microObject.isActive() == isActive && microObject.getHp() == hitpoint && microObject.getAmountCursedEnergy() == CE) {
+                        found = true;
+                        System.out.println("Знайдено:");
+                        System.out.println("X: " + microObject.getXPos() + ", Y:" + microObject.getYPos());
+
+                        if((microObject.getXPos() >= MacroObjectManager.X_POS_SCHOOL && microObject.getXPos() <= MacroObjectManager.X_POS_SCHOOL + MacroObjectManager.WIDTH) && (microObject.getYPos() >= MacroObjectManager.Y_POS_SCHOOL && microObject.getYPos() <= MacroObjectManager.Y_POS_SCHOOL + MacroObjectManager.HEIGHT)   ){
+                            System.out.println("Перебуває в школі");
+                            break;
+                        } else if((microObject.getXPos() >= MacroObjectManager.X_POS_EXPANCION && microObject.getXPos() <= MacroObjectManager.X_POS_EXPANCION  + MacroObjectManager.WIDTH) && (microObject.getYPos() >= MacroObjectManager.Y_POS_EXPANCION && microObject.getYPos() <= MacroObjectManager.Y_POS_EXPANCION + MacroObjectManager.HEIGHT)   ){
+                            System.out.println("Перебуває в розширеній тереторії");
+                            break;
+                        } else if((microObject.getXPos() >= MacroObjectManager.X_POS_SIBYUA && microObject.getXPos() <= MacroObjectManager.X_POS_SIBYUA + MacroObjectManager.WIDTH) && (microObject.getYPos() >= MacroObjectManager.Y_POS_SIBYUA && microObject.getYPos() <= MacroObjectManager.Y_POS_SIBYUA + MacroObjectManager.HEIGHT)   ){
+                            System.out.println("Перебуває в станції сібуя");
+                            break;
+                        } else if (!((microObject.getXPos() >= 70 && microObject.getXPos() <= 470) && (microObject.getYPos() >= 50 && microObject.getYPos() <= 350)) &&
+                                !((microObject.getXPos() >= 1100 && microObject.getXPos() <= 1500) && (microObject.getYPos() >= 50 && microObject.getYPos() <= 350)) &&
+                                !((microObject.getXPos() >= 600 && microObject.getXPos() <= 1000) && (microObject.getYPos() >= 450 && microObject.getYPos() <= 750))) {
+                            System.out.println("Не перебуває в жодному мікрооб'єкті");
+                        }
+                    }
+                }
+                if (!found) {
+                    System.out.println("Мікрооб'єкт не знайдено");
+                }
+            }catch (IllegalArgumentException e){
+                System.out.println("Error");
+            }
+        }).start();
     }
 
     public Shaman getOnlyActiveShaman() {
@@ -386,11 +453,11 @@ public class MicroObjectManager {
                         System.out.println("Error loading changeParam.fxml");
                     }
                 }
-            }else{
-                System.out.println("chose only 1 object!!!");
             }
         }
     }
+
+
 
 
 

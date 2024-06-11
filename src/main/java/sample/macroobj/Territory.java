@@ -18,8 +18,6 @@ public abstract class Territory {
     protected static String imagePath1;
     protected static ArrayList<Shaman> microObjects;
     protected ArrayList<String> microObjectsNames;
-    protected final static int height = 300;
-    protected final static int width = 400;
     protected float xPos;
     protected float yPos;
     protected ImageView imageView;

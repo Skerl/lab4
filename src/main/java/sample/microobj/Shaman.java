@@ -4,7 +4,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import sample.lab4.Main;
 import sample.lab4.Paths;
 
 import java.io.Serializable;
@@ -433,6 +432,19 @@ public class Shaman implements Comparable<Shaman>, Cloneable, Serializable {
 
         return path[randomNumber];
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof Shaman shaman)) return false;
+        return isActive() == shaman.isActive() &&
+                uniqueID == shaman.uniqueID &&
+                hp == shaman.getHp() &&
+                lvl == shaman.getLvl() &&
+                getAmountCursedEnergy() == shaman.getAmountCursedEnergy();
+    }
+
+
 }
 
 
