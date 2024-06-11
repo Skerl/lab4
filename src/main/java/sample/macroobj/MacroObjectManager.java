@@ -29,7 +29,7 @@ public class MacroObjectManager {
         addMacroObject(sibyua);
     }
 
-    public synchronized ArrayList<Territory> getMacroObjects() {
+    public static synchronized ArrayList<Territory> getMacroObjects() {
         return macroObjects;
     }
 

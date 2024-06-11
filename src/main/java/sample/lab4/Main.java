@@ -1,6 +1,7 @@
 package sample.lab4;
 
 import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -25,10 +26,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 import sample.microobj.*;
 import sample.macroobj.*;
@@ -48,7 +46,7 @@ public class Main extends Application {
     private MacroObjectManager macroObjectManager;
     private Canvas canvas;
     private Canvas miniMap;
-    public final static int FPS = 360;
+    public final static int FPS = 120;
     private double initialOffsetX;
     private double initialOffsetY;
     private static boolean HOLD = false;
@@ -58,7 +56,7 @@ public class Main extends Application {
 
         ScrollPane mainScrollPane = new ScrollPane();
         AnchorPane mainPane = new AnchorPane();
-        mainPane.setPrefSize(2000, 2000);
+        mainPane.setPrefSize(3000, 3000);
 
         mainScrollPane.setContent(mainPane);
 
@@ -87,6 +85,8 @@ public class Main extends Application {
 
         mainScene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
+                case H:
+                    System.out.println(Shaman.getRandomNumberInRange(10, 100));
                 case Q:
                     microObjectManager.swichToWhiteBack(); // поміняти колір іконки рангу на червоний
                     break;
@@ -152,6 +152,24 @@ public class Main extends Application {
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
+
+//        AnimationTimer timer = new AnimationTimer() {
+//            private  long lastUpdate = 0;
+//            @Override
+//            public void handle(long now) {
+//                if (now - lastUpdate >= 1000_000_000) {
+//
+//                    List<Shaman> shamans = microObjectManager.getShamans();
+//                    if (shamans != null && !shamans.isEmpty()) {
+//                        Shaman shaman = shamans.getFirst();
+//                        shaman.setXPos(shaman.getXPos() + 3);
+//                    }
+//                    lastUpdate = now;
+//                }
+//            }
+//        };
+
+//        timer.start();
 
         addPressAndHoldHandler(mainPane, event -> {
             double xPos = event.getX();

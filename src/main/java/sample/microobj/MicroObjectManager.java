@@ -125,21 +125,24 @@ public class MicroObjectManager {
                     case 1:
                         for(Shaman o: shamans){
                             if((o.getXPos() >= MacroObjectManager.X_POS_SCHOOL && o.getXPos() <= MacroObjectManager.X_POS_SCHOOL + MacroObjectManager.WIDTH) && (o.getYPos() >= MacroObjectManager.Y_POS_SCHOOL && o.getYPos() <= MacroObjectManager.Y_POS_SCHOOL + MacroObjectManager.HEIGHT)   ){
-                                System.out.println(o);
+                                //System.out.println(o);
+                                displayInfo(o);
                             }
                         }
                         break;
                     case 2:
                         for(Shaman o: shamans){
                             if((o.getXPos() >= MacroObjectManager.X_POS_EXPANCION && o.getXPos() <= MacroObjectManager.X_POS_EXPANCION  + MacroObjectManager.WIDTH) && (o.getYPos() >= MacroObjectManager.Y_POS_EXPANCION && o.getYPos() <= MacroObjectManager.Y_POS_EXPANCION + MacroObjectManager.HEIGHT)   ){
-                                System.out.println(o);
+                                //System.out.println(o);
+                                displayInfo(o);
                             }
                         }
                         break;
                     case 3:
                         for(Shaman o: shamans){
                             if((o.getXPos() >= MacroObjectManager.X_POS_SIBYUA && o.getXPos() <= MacroObjectManager.X_POS_SIBYUA + MacroObjectManager.WIDTH) && (o.getYPos() >= MacroObjectManager.Y_POS_SIBYUA && o.getYPos() <= MacroObjectManager.Y_POS_SIBYUA + MacroObjectManager.HEIGHT)   ){
-                                System.out.println(o);
+                                //System.out.println(o);
+                                displayInfo(o);
                             }
                         }
                         break;
@@ -174,8 +177,8 @@ public class MicroObjectManager {
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
-            copiedShaman.setxPos(0);
-            copiedShaman.setYPos(0);
+            copiedShaman.setxPos(20);
+            copiedShaman.setYPos(20);
             shamans.add(copiedShaman);
         }
     }
@@ -487,7 +490,7 @@ public class MicroObjectManager {
     }
 
     public void fastCreateMicroObjectGR1() {
-        ShamanGrade1 Biden = new ShamanGrade1("Biden", 10, 5000, 20000, 300, 300);
+        ShamanGrade1 Biden = new ShamanGrade1("Biden", 1, 100, 20000, 300, 300);
         Biden.EnterKilledMobs("Osama Ben Laden", 9, 1);
         Biden.EnterKilledMobs("Poor children in Africa", 1, 100000);
 
@@ -495,7 +498,7 @@ public class MicroObjectManager {
     }
 
     public void fastCreateMicroObjectGR_HIGH() {
-        ShamanGradeHigh PesPatron = new ShamanGradeHigh("Pes Patron", 9, 100, 1000, 400, 400);
+        ShamanGradeHigh PesPatron = new ShamanGradeHigh("Pes Patron", 1, 100, 1000, 400, 400);
         PesPatron.EnterKilledMobs("Osama Ben Laden", 9, 1);
         PesPatron.EnterKilledMobs("Poor children in Africa", 1, 100000);
 
@@ -504,7 +507,7 @@ public class MicroObjectManager {
 
 
     public void fastCreateMicroObjectGR2() {
-        Shaman Poroshenko = new Shaman("Poroshenko", 5, 4500, 2019, 200, 200);
+        Shaman Poroshenko = new Shaman("Poroshenko", 1, 100, 2019, 200, 200);
         Poroshenko.EnterKilledMobs("Fans of the Yanukovich", 4, 200);
         Poroshenko.EnterKilledMobs("Business competitors", 8, 10);
         Poroshenko.EnterKilledMobs("Political competitors", 9, 150);
@@ -577,7 +580,8 @@ public class MicroObjectManager {
                     if(createDefShaman.isSelected()) {
                         Shaman shaman = new Shaman();
                         shamans.add(shaman);
-                        System.out.println("Мікрочел створений");
+                        //System.out.println("Мікрочел створений");
+                        displayInfo("Мікрочел створений");
                         return shaman;
                     } else if (radioButton1.isSelected()) {
                         Shaman shaman = new Shaman(name, lvl, healthpoint, amountCursedEnergy, xPos, yPos);
@@ -609,6 +613,7 @@ public class MicroObjectManager {
                 shamans.add(shaman);
                 return shaman;
             }
+
             if(radioButton2.isSelected()){
                 ShamanGrade1 shamangr1 = new ShamanGrade1();
                 shamans.add(shamangr1);
@@ -627,6 +632,30 @@ public class MicroObjectManager {
         result.ifPresent(microObject -> System.out.println("Created"));
     }
 
-    public void updateAllMicroObjects(){}
+    public void updateAllMicroObjects(){
+        for(Territory territory : MacroObjectManager.getMacroObjects()) {
+            for (Shaman shaman : getArray()) {
+                shaman.update(territory);
+            }
+        }
+    }
 
+
+    public static void displayInfo(String message) {
+        System.out.println("Повідомлення: " + message);
+    }
+
+
+    public static void displayInfo(int number) {
+        System.out.println("Число: " + number);
+    }
+
+
+    public static void displayInfo(double value) {
+        System.out.println("Значення: " + value);
+    }
+
+    public static void displayInfo(Shaman shaman) {
+        System.out.println("Значення: " + shaman);
+    }
 }

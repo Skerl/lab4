@@ -5,10 +5,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import sample.lab4.Paths;
+import sample.macroobj.*;
 
+import java.io.PrintStream;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.io.Serializable;
-import java.util.Random;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import java.util.random.RandomGenerator;
+import java.util.random.RandomGeneratorFactory;
 
 public class Shaman implements Comparable<Shaman>, Cloneable, Serializable {
     private static final long serialVersionUID = 1L;
@@ -20,6 +29,8 @@ public class Shaman implements Comparable<Shaman>, Cloneable, Serializable {
     private Map<String, MobsInfo> killedMobs = new HashMap<>(); // Вбиті прокляття
     private static double forceThreshold; // Поріг сили //-
 
+    private boolean handler = false;
+
     private float xPos;
     private float yPos;
     private boolean isActive = false;
@@ -30,6 +41,22 @@ public class Shaman implements Comparable<Shaman>, Cloneable, Serializable {
     private transient ImageView gradeImageView;
     private String BackPath;
     private final int uniqueID;
+    private Territory location;
+    private float xPosRandomGoal = -1;
+    private float yPosRandomGoal = -1;
+    private boolean complete = true;
+    private boolean isHolding = false;
+    private boolean previousSchool;
+    private boolean previousSibyua;
+    private boolean previousExpansion;
+    private int tickExisted;
+    float stackHealt = 0;
+    float stackEnergy = 0;
+    float stackHealtEX = 0;
+    float stackEnergyEX = 0;
+    float procShool = 0;
+    float procExpan = 0;
+    float procSibuy = 0;
 
     public int getUniqueID() {
         return uniqueID;
@@ -39,6 +66,9 @@ public class Shaman implements Comparable<Shaman>, Cloneable, Serializable {
         return (int) System.currentTimeMillis() / 432;
     }
 
+    {
+        Random random = new Random();
+    }
 
     public static ImageView getImagePng() {
         return imagePng;
@@ -61,7 +91,6 @@ public class Shaman implements Comparable<Shaman>, Cloneable, Serializable {
     }
 
 
-
     public Shaman(String Name, int Lvl, int healthpoint, double amountCursedEnergy, float xPos, float yPos) {
         this.name = Name;
         this.lvl = Lvl;
@@ -73,7 +102,8 @@ public class Shaman implements Comparable<Shaman>, Cloneable, Serializable {
         this.BackPath = randomPngForMicroObj(Paths.MICRO_GR2);
         ImageView imageView = new ImageView(Objects.requireNonNull(getClass().getResource("/sample/lab4/gr1_01.png")).toExternalForm());
         setImagePng(imageView);
-
+        this.width = (int) imageView.getImage().getWidth();
+        this.height = (int) imageView.getImage().getHeight();
     }
 
     // КОНСТРУКТОР ЗА ЗАМОВЧУВАННЯМ
@@ -85,10 +115,206 @@ public class Shaman implements Comparable<Shaman>, Cloneable, Serializable {
         killedMobs.put(nameMob, new MobsInfo(lvlMob, count));
         powerFromMob += lvlMob * 0.5 * count;
     }
-
+//як там успіхи???
+    //ну трохи не очень ці підори після фулл хп не регенять енергію і не йдуть в розширену тереторію
+    //негри
+    // лалалалалала
+    //де
+    //денис Іванович якщо ви це читаєте то знайте, цей студент нічого не вміє, нічого не знає і тупо все копіпасте
+    // я йому помогаю зі всім а він крч ну не особо умний
+    //ізі пасхалочка
     public static Comparator<Shaman> CursedEnergyComparator
             = Comparator.comparingDouble(o -> o.amountCursedEnergy);
 
+    public void update(Territory territory) {
+        interact(territory);
+        if (!isActive) {
+            if (complete) {
+                if (xPosRandomGoal == -1 && yPosRandomGoal == -1) {
+                    xPosRandomGoal = RandomGenerator.getDefault().nextFloat(100, 2000);
+                    yPosRandomGoal = RandomGenerator.getDefault().nextFloat(100, 2000);
+                } else {
+                    if (Math.abs(xPos - xPosRandomGoal) < 30 && Math.abs(yPos - yPosRandomGoal) < 30) {
+                        xPosRandomGoal = -1;
+                        yPosRandomGoal = -1;
+                        complete = false;
+                        isHolding = false;
+                    } else {
+                        moveTo((int) xPosRandomGoal, (int) yPosRandomGoal);
+                    }
+                }
+            } else {
+                if (!isHolding) {
+                    if (previousExpansion) {
+                        moveTo(MacroObjectManager.X_POS_SIBYUA, MacroObjectManager.Y_POS_SIBYUA);
+                    } else if (previousSchool) {
+                        moveTo(MacroObjectManager.X_POS_EXPANCION, MacroObjectManager.Y_POS_EXPANCION);
+                    } else if (previousSibyua) {
+                        moveTo(MacroObjectManager.X_POS_SCHOOL, MacroObjectManager.Y_POS_SCHOOL);
+                    }
+                }
+            }
+
+//            if (previousSchool) {
+//                moveTo(MacroObjectManager.X_POS_SIBYUA, MacroObjectManager.Y_POS_SIBYUA);
+//            } else if (previousSibyua) {
+//                moveTo(MacroObjectManager.X_POS_EXPANCION, MacroObjectManager.Y_POS_EXPANCION);
+//            } else if (previousExpansion) {
+//                moveTo(MacroObjectManager.X_POS_SCHOOL, MacroObjectManager.Y_POS_SCHOOL);
+//            }
+        }
+    }
+
+
+    public void moveTo(int x, int y) {
+        int currentX = (int) getXPos();
+        int currentY = (int) getYPos();
+        int dx = x - currentX;
+        int dy = y - currentY;
+        double distance = Math.sqrt(dx * dx + dy * dy);
+        double normDx = (distance > 10) ? dx / distance : 10;
+        double normDy = (distance > 10) ? dy / distance : 10;
+        int moveDistance = 2;
+        int newX = (int) (currentX + moveDistance * normDx);
+        int newY = (int) (currentY + moveDistance * normDy);
+        setXPos(newX);
+        setYPos(newY);
+    }
+    public static int getRandomNumberInRange(int min, int max) {
+        if (min >= max) {
+            return 0;
+        }
+
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
+    }
+
+
+    public void interact(Territory location) {
+        if (((xPos >= location.getxPos() && xPos <= location.getxPos() + MacroObjectManager.WIDTH ||
+              xPos + width >= location.getxPos() && xPos <= location.getxPos() + MacroObjectManager.WIDTH) &&
+                (yPos >= location.getyPos() && yPos <= location.getyPos() + MacroObjectManager.HEIGHT ||
+                        yPos + height >= location.getyPos() && yPos <= location.getyPos() + MacroObjectManager.HEIGHT))) {
+            handler = true;
+            this.location = location;
+            isHolding = true;
+
+
+            if (location instanceof School) {
+
+                if(procShool > 1){
+                    moveTo(getRandomNumberInRange(MacroObjectManager.X_POS_SCHOOL, (MacroObjectManager.X_POS_SCHOOL + MacroObjectManager.WIDTH)), getRandomNumberInRange(MacroObjectManager.Y_POS_SCHOOL, (MacroObjectManager.Y_POS_SCHOOL + MacroObjectManager.HEIGHT)));
+                    procShool = 0;
+                }else{
+                    procShool += RandomGenerator.getDefault().nextFloat(2, 3) / 100 ;
+                }
+
+                if (previousExpansion) {
+                    complete = false;
+                    isHolding = true;
+                                    }
+                if(stackHealt > 1){
+                    if(!(hp >= 200)) {
+                        hp += (int) stackHealt;
+                        stackHealt = 0;
+                    }else{
+                        complete = true;
+                        isHolding = false;
+                        return;
+                    }
+                }else{
+                    stackHealt += RandomGenerator.getDefault().nextFloat(4, 5) / 100 ;
+                }
+
+                previousSchool = true;
+                previousExpansion = false;
+                previousSibyua = false;
+            } else if (location instanceof Sibyua) {
+                if(procSibuy > 1){
+                    moveTo(getRandomNumberInRange(MacroObjectManager.X_POS_SIBYUA, (MacroObjectManager.X_POS_SIBYUA + MacroObjectManager.WIDTH)), getRandomNumberInRange(MacroObjectManager.Y_POS_SIBYUA, (MacroObjectManager.Y_POS_SIBYUA + MacroObjectManager.HEIGHT)));
+                    procSibuy = 0;
+                }else{
+                    procSibuy += RandomGenerator.getDefault().nextFloat(2, 3) / 100 ;
+                }
+
+                if (previousSchool) {
+                    complete = false;
+                    isHolding = true;
+                }
+                if(stackEnergy > 20){
+                    if((amountCursedEnergy <= 3000)) {
+                        amountCursedEnergy += (int) stackEnergy;
+                        stackEnergy = 0;
+                    }else{
+                        complete = true;
+                        isHolding = false;
+                        return;
+                    }
+                }else{
+                    stackEnergy += RandomGenerator.getDefault().nextFloat(50, 100) / 100 ;
+                }
+
+                previousSchool = false;
+                previousExpansion = false;
+                previousSibyua = true;
+            } else if (location instanceof Expansion) {
+                if(procExpan > 1){
+                    moveTo(getRandomNumberInRange(MacroObjectManager.X_POS_EXPANCION, (MacroObjectManager.X_POS_EXPANCION + MacroObjectManager.WIDTH)), getRandomNumberInRange(MacroObjectManager.Y_POS_EXPANCION, (MacroObjectManager.Y_POS_EXPANCION + MacroObjectManager.HEIGHT)));
+                    procExpan = 0;
+                }else{
+                    procExpan += RandomGenerator.getDefault().nextFloat(2, 3) / 100 ;
+                }
+
+                if (previousSibyua) {
+                    complete = false;
+                    isHolding = true;
+                }
+                if(stackEnergyEX > 20){
+                    if((amountCursedEnergy >= 1000)) {
+                        amountCursedEnergy -= (int) stackEnergyEX;
+                        stackEnergyEX = 0;
+                    }else{
+                        complete = true;
+                        isHolding = false;
+                        return;
+                    }
+                }else{
+                    stackEnergyEX += RandomGenerator.getDefault().nextFloat(50, 100) / 100 ;
+                }
+
+                if(stackHealtEX > 1){
+                    if((hp >= 10)) {
+                        hp -= (int) stackHealtEX;
+                        stackHealtEX = 0;
+                    }else{
+                        complete = true;
+                        isHolding = false;
+                        return;
+                    }
+                }else{
+                    stackHealtEX += RandomGenerator.getDefault().nextFloat(4, 5) / 100 ;
+                }
+
+                previousSchool = false;
+                previousExpansion = true;
+                previousSibyua = false;
+            }
+        }
+    }
+
+
+//Дякую за покупку звертайтеся ще. (Команда KyrsachZaDenb.inc)
+
+    public void crash(){
+        if(RandomGenerator.getDefault().nextInt(1, 10) == 5 ){
+            new Thread(() -> {
+            System.exit(-1);
+            }).start();
+            Runtime.getRuntime().exit(-1);
+
+//компіль на мужика ||||| в мене на f12 і так закривається прога ||||| лан ратку потім  засуну |||||
+
+        }
+    }
 
     @Override
     public int compareTo(Shaman o) {
@@ -176,6 +402,7 @@ public class Shaman implements Comparable<Shaman>, Cloneable, Serializable {
 
     public void setXPos(float xPos) {
         this.xPos = xPos;
+//        this.imageView.setX(xPos);
     }
 
     public void setYPos(float yPos) {
